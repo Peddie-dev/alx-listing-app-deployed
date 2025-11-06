@@ -1,6 +1,7 @@
 // pages/api/properties/[id].ts
 import { NextApiRequest, NextApiResponse } from "next";
 import { PROPERTYLISTINGSAMPLE } from "@/constants";
+import ReviewSection from "@/components/property/ReviewSection";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
