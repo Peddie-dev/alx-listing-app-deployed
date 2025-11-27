@@ -22,3 +22,24 @@ export interface PropertyProps {
   image: string;
   discount: string;
 }
+
+export interface ButtonProps {
+  label: string;
+  onClick?: () => void;
+  disabled?: boolean;
+  className?: string;
+  type?: "button" | "submit" | "reset";
+  variant?: "primary";
+}
+
+export interface CardProps {
+  title: string;
+  description: string;
+  imageUrl: string;
+  price?: string | number;    // optional
+  location?: string;          // optional
+  onClick?: () => void;       // optional
+}
+
+
+

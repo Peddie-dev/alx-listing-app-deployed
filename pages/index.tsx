@@ -3,16 +3,16 @@ import { useEffect, useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import PropertyCard from "@/components/ui/PropertyCard";
-import Pill from "@/components/ui/Pill"; 
 import { HERO_BG } from "@/constants";
+import { PropertyProps } from "@/interfaces";
 
 export default function Home() {
-  const [properties, setProperties] = useState([]);
+  const [properties, setProperties] = useState<PropertyProps[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedFilter, setSelectedFilter] = useState("");
-  const filters = ["Apartments", "Villas", "Offices", "Resorts"]; // Example filters
-  const HERO_BG =
-    "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1600&q=80"; // Fallback hero background
+  
+  // Filters should match the categories you have in your sample data
+  const filters = ["Luxury Villa", "Pool", "Free Parking", "Mountain View", "Fireplace", "Self Checkin", "Desert View", "Pet Friendly"];
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -35,8 +35,6 @@ export default function Home() {
 
   return (
     <>
-     
-
       {/* Hero Section */}
       <section
         className="h-[500px] flex flex-col justify-center items-center text-center text-white bg-cover bg-center relative"
@@ -76,14 +74,14 @@ export default function Home() {
       <main className="max-w-7xl mx-auto px-4 pb-10 grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
         {properties
           .filter((property) =>
-            selectedFilter ? property.type === selectedFilter : true
+            selectedFilter
+              ? property.category.some((cat) => cat.includes(selectedFilter))
+              : true
           )
           .map((property) => (
             <PropertyCard key={property.id} property={property} />
           ))}
       </main>
-
-     
     </>
   );
 }

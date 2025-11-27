@@ -1,8 +1,19 @@
 import { useState } from "react";
 import axios from "axios";
 
+interface BookingFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  cardNumber: string;
+  expirationDate: string;
+  cvv: string;
+  billingAddress: string;
+}
+
 export default function BookingForm() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<BookingFormData>({
     firstName: "",
     lastName: "",
     email: "",
@@ -18,10 +29,13 @@ export default function BookingForm() {
   const [success, setSuccess] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    // Type-safe dynamic key assignment
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -63,24 +77,17 @@ export default function BookingForm() {
       <h1 className="text-2xl font-semibold mb-4 text-center">Booking Form</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Input fields */}
-        {[
-          { label: "First Name", name: "firstName", type: "text" },
-          { label: "Last Name", name: "lastName", type: "text" },
-          { label: "Email", name: "email", type: "email" },
-          { label: "Phone Number", name: "phoneNumber", type: "tel" },
-          { label: "Card Number", name: "cardNumber", type: "text" },
-          { label: "Expiration Date", name: "expirationDate", type: "text" },
-          { label: "CVV", name: "cvv", type: "password" },
-          { label: "Billing Address", name: "billingAddress", type: "text" },
-        ].map((field) => (
-          <div key={field.name}>
+        {Object.keys(formData).map((key) => (
+          <div key={key}>
             <label className="block mb-1 text-sm font-medium text-gray-700">
-              {field.label}
+              {key
+                .replace(/([A-Z])/g, " $1")
+                .replace(/^./, (str) => str.toUpperCase())}
             </label>
             <input
-              type={field.type}
-              name={field.name}
-              value={(formData as any)[field.name]}
+              type={key === "cvv" ? "password" : "text"}
+              name={key}
+              value={formData[key as keyof BookingFormData]}
               onChange={handleChange}
               required
               className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-emerald-500 outline-none"
